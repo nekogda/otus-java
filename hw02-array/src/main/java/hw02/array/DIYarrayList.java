@@ -1,6 +1,7 @@
 package hw02.array;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DIYarrayList<T> implements List<T> {
 
@@ -45,11 +46,9 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public String toString() {
-        StringJoiner sj = new StringJoiner(", ", this.getClass().getSimpleName() + "[", "]");
-        for (T item : Arrays.asList(data).subList(0, size())) {
-            sj.add(item.toString());
-        }
-        return sj.toString();
+        return Arrays.asList(data).subList(0, size()).stream()
+                .map(Objects::toString)
+                .collect(Collectors.joining(", ", this.getClass().getSimpleName() + "[", "]"));
     }
 
     private int calcNewSize() {
