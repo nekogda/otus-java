@@ -1,12 +1,12 @@
-package hw03.annotations;
+package hw03.annotations.ntest;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 
-class BasicTestCollector implements TestCollector {
+public class BasicTestCollector implements TestCollector {
     private final String className;
 
-    BasicTestCollector(String className) {
+    public BasicTestCollector(String className) {
         this.className = className;
     }
 

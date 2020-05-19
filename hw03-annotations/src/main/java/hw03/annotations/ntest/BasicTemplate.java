@@ -1,4 +1,4 @@
-package hw03.annotations;
+package hw03.annotations.ntest;
 
 public interface BasicTemplate {
     String render(BasicReportData rd);

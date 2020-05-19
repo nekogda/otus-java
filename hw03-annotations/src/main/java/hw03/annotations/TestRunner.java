@@ -1,12 +1,14 @@
 package hw03.annotations;
 
+import hw03.annotations.ntest.*;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 
 public class TestRunner {
     public static void main(String[] args) throws ClassNotFoundException, IOException {
-        TestCollector collector = new BasicTestCollector("hw03.annotations.AnnotationsTest");
+        TestCollector collector = new BasicTestCollector("hw03.annotations.example.AnnotationsTest");
         TestReporter reporter = new BasicTestReporter(new ColorTextBasicTemplate(), new OutputStreamWriter(System.out));
 
         TestRunner.run(collector, reporter);

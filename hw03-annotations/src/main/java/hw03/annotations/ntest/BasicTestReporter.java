@@ -1,14 +1,14 @@
-package hw03.annotations;
+package hw03.annotations.ntest;
 
 import java.io.IOException;
 import java.io.Writer;
 
-class BasicTestReporter implements TestReporter {
+public class BasicTestReporter implements TestReporter {
 
     private final ColorTextBasicTemplate tmpl;
     private final Writer out;
 
-    BasicTestReporter(ColorTextBasicTemplate tmpl, Writer out) {
+    public BasicTestReporter(ColorTextBasicTemplate tmpl, Writer out) {
         this.tmpl = tmpl;
         this.out = out;
     }

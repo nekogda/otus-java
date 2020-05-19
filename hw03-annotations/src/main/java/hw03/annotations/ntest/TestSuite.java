@@ -1,4 +1,4 @@
-package hw03.annotations;
+package hw03.annotations.ntest;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,7 +28,7 @@ public class TestSuite implements Iterable<TestCase> {
         testCases.add(new TestCase(test));
     }
 
-    void run() {
+    public void run() {
         for (TestCase tc : testCases) {
             try {
                 Object instance = klass.getDeclaredConstructor().newInstance();

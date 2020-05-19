@@ -1,4 +1,8 @@
-package hw03.annotations;
+package hw03.annotations.example;
+
+import hw03.annotations.ntest.After;
+import hw03.annotations.ntest.Before;
+import hw03.annotations.ntest.Test;
 
 public class AnnotationsTest {
 

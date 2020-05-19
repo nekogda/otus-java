@@ -1,6 +1,6 @@
-package hw03.annotations;
+package hw03.annotations.ntest;
 
-class ColorTextBasicTemplate implements BasicTemplate {
+public class ColorTextBasicTemplate implements BasicTemplate {
     static final String ANSI_RESET = "\u001B[0m";
     static final String ANSI_RED = "\u001B[31m";
     static final String ANSI_GREEN = "\u001B[32m";
