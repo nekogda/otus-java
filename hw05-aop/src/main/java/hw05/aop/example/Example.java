@@ -17,6 +17,11 @@ public class Example implements IExample {
     }
 
     @Override
+    public String getGreeting(String name, String suffix) {
+        return String.format("Hello %s %s", name, suffix);
+    }
+
+    @Override
     public String withoutAnnotation() {
         return "without annotation";
     }

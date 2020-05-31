@@ -10,18 +10,27 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DynamicInvocationHandler implements InvocationHandler {
-    private final Map<String, String> methods = new HashMap<>();
+    private final Map<Method, String> methods = new HashMap<>();
     private final Object target;
 
-    public DynamicInvocationHandler(Object target) {
+    public DynamicInvocationHandler(Object target, Class<?> proxyInterface) {
         if (target == null) {
             throw new IllegalArgumentException("target must be not null");
         }
+        if (!proxyInterface.isAssignableFrom(target.getClass())) {
+            throw new IllegalArgumentException("target must implement proxyInterface");
+        }
         this.target = target;
-        for (var method : target.getClass().getMethods()) {
-            var logAnnotation = method.getDeclaredAnnotation(Log.class);
+        for (var proxyMethod : proxyInterface.getMethods()) {
+            Method targetMethod = null;
+            try {
+                targetMethod = target.getClass().getMethod(proxyMethod.getName(), proxyMethod.getParameterTypes());
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            var logAnnotation = targetMethod.getDeclaredAnnotation(Log.class);
             if (logAnnotation != null) {
-                methods.put(method.getName(), logAnnotation.value().toString());
+                methods.put(proxyMethod, logAnnotation.value().toString());
             }
         }
     }
@@ -41,10 +50,9 @@ public class DynamicInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        var methodName = method.getName();
-        var logLevel = methods.get(methodName);
+        var logLevel = methods.get(method);
         if (logLevel != null) {
-            System.out.println(formatLogRecord(methodName, logLevel, args));
+            System.out.println(formatLogRecord(method.getName(), logLevel, args));
         }
         return method.invoke(target, args);
     }
