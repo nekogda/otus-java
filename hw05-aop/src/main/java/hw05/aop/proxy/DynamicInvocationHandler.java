@@ -22,11 +22,11 @@ public class DynamicInvocationHandler implements InvocationHandler {
         }
         this.target = target;
         for (var proxyMethod : proxyInterface.getMethods()) {
-            Method targetMethod = null;
+            Method targetMethod;
             try {
                 targetMethod = target.getClass().getMethod(proxyMethod.getName(), proxyMethod.getParameterTypes());
             } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+                throw new IllegalStateException("invariant violation");
             }
             var logAnnotation = targetMethod.getDeclaredAnnotation(Log.class);
             if (logAnnotation != null) {
