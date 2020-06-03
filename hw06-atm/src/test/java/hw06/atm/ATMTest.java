@@ -85,7 +85,7 @@ class ATMTest {
 
         assertEquals(BigDecimal.valueOf(800), withdrawal.getSum());
         assertEquals(3, withdrawal.getNotesCount());
-        assertEquals(3, cassettes.stream().map(Cassette::getNoteCount).reduce(0,Integer::sum));
+        assertEquals(3, cassettes.stream().map(Cassette::getNoteCount).reduce(0, Integer::sum));
         assertEquals(BigDecimal.valueOf(800), balance);
     }
 
