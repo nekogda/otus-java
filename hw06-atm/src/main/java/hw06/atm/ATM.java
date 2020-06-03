@@ -16,6 +16,9 @@ public class ATM {
     private WithdrawalStrategy withdrawalStrategy;
 
     public ATM(Dispenser dispenser, WithdrawalStrategy withdrawalStrategy) {
+        if (dispenser == null || withdrawalStrategy == null) {
+            throw new IllegalArgumentException("argument must be not null");
+        }
         this.dispenser = dispenser;
         this.withdrawalStrategy = withdrawalStrategy;
     }
@@ -44,8 +47,7 @@ public class ATM {
 
 
     public BigDecimal getBalance() {
-        BigDecimal result = dispenser.getBalance();
-        return result;
+        return dispenser.getBalance();
     }
 
     public List<Cassette> reloadCassettes(List<Cassette> cassettes) {

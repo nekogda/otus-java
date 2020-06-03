@@ -2,36 +2,41 @@ package hw06.atm.dispenser;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultDispenser implements Dispenser {
-    private List<Cassette> cassettes;
+    private List<Cassette> cassettes = new ArrayList<>();
 
     @Override
     public List<Cassette> takeCassettes() {
-        var result = cassettes;
-        cassettes = null;
+        var result = getCassettes();
+        cassettes.clear();
         return result;
+    }
+
+    private List<Cassette> copyCassettes(List<Cassette> cassettes) {
+        return cassettes.stream()
+                .map(Cassette::new)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Cassette> getCassettes() {
-        // assert
-        return cassettes;
+        return copyCassettes(cassettes);
     }
-
 
     @Override
     public void insertCassettes(List<Cassette> cassettes) {
-        this.cassettes = cassettes;
+        this.cassettes = copyCassettes(cassettes);
     }
 
     @Override
     public BigDecimal getBalance() {
-        if (cassettes == null) {
-            return BigDecimal.ZERO;
-        }
-        return cassettes.stream().map(Cassette::getBalance).reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+        return cassettes.stream()
+                .map(Cassette::getBalance)
+                .reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
     }
 
     @Override

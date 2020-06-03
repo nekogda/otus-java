@@ -16,6 +16,11 @@ public class Cassette {
         this.nominal = nominal;
     }
 
+    public Cassette(Cassette cassette) {
+        this.noteCount = cassette.noteCount;
+        this.nominal = cassette.getNominal();
+    }
+
     public int takeNotes(int count) {
         if (count > noteCount) {
             throw new IllegalArgumentException("not enough notes, requested: " + count + " have: " + noteCount);

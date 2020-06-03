@@ -18,15 +18,6 @@ public class ATMBuilder {
     }
 
     public ATM build() {
-        for (var field : this.getClass().getDeclaredFields()) {
-            try {
-                if (field.get(this) == null) {
-                    throw new IllegalStateException("missing value for the '" + field.getName() + "' field");
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
         return new ATM(dispenser, withdrawalStrategy);
     }
 }

@@ -42,6 +42,7 @@ public class GreedyWithdrawalStrategy implements WithdrawalStrategy {
             cassette.takeNotes(numOfNotes);
             withdrawal.put(cassette.getNominal(), numOfNotes);
         }
+        dispenser.insertCassettes(cassettes);
         return Optional.of(withdrawal);
     }
 }
