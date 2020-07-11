@@ -1,12 +1,11 @@
 package hw07.department.observer;
 
 import hw07.department.factory.EventListenersCreator;
+import hw07.department.visitor.Ctx;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 
 public class NotificationManager {
     private final HashMap<EventType, ArrayList<Listener>> subscribers = new HashMap<>();
@@ -35,7 +34,7 @@ public class NotificationManager {
         }
     }
 
-    public void notifySubscribers(EventType eventType, Map<EventType, Object> ctx) {
+    public void notifySubscribers(EventType eventType, Ctx ctx) {
         for (var handler : subscribers.get(eventType)) {
             handler.onEvent(ctx);
         }

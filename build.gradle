@@ -10,6 +10,10 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'com.github.johnrengelman.shadow'
 
+    compileJava {
+        options.compilerArgs << '-Xlint:unchecked'
+    }
+
     group 'ru.otus'
 
     sourceCompatibility = JavaVersion.VERSION_13

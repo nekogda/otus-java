@@ -8,14 +8,12 @@ import hw07.department.chain.ChainBuilder;
 import hw07.department.chain.Handler;
 import hw07.department.chain.HasCashCommand;
 import hw07.department.memento.Caretaker;
-import hw07.department.observer.NotificationManager;
-import hw07.department.observer.report.BalanceReport;
 import hw07.department.observer.EventType;
+import hw07.department.observer.NotificationManager;
+import hw07.department.visitor.BalanceReportCtx;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Department {
@@ -43,11 +41,9 @@ public class Department {
     }
 
     public BigDecimal gatherATMsBalance() {
-        Map<EventType, Object> ctx = new HashMap<>();
-        ctx.put(EventType.report, new BalanceReport());
+        var ctx = new BalanceReportCtx();
         notificationManager.notifySubscribers(EventType.report, ctx);
-        var report = (BalanceReport) ctx.get(EventType.report);
-        return report.getBalance();
+        return ctx.getReport().getBalance();
     }
 
     public Withdrawal getCash(DepATM atm, BigDecimal amount) {

@@ -1,7 +1,7 @@
 package hw07.department.observer;
 
-import java.util.Map;
+import hw07.department.visitor.Ctx;
 
 public interface Listener {
-    void onEvent(Map<EventType, Object> ctx);
+    void onEvent(Ctx ctx);
 }
