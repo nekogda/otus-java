@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -17,6 +20,22 @@ class MyJsonTest {
     void setup() {
         myJson = new MyJson();
         gson = new Gson();
+    }
+
+    @Test
+    @DisplayName("serialize scalar objects to json")
+    void scalarTest() {
+        assertEquals(gson.toJson(null), myJson.toJson(null));
+        assertEquals(gson.toJson((byte) 1), myJson.toJson((byte) 1));
+        assertEquals(gson.toJson((short) 1f), myJson.toJson((short) 1f));
+        assertEquals(gson.toJson(1), myJson.toJson(1));
+        assertEquals(gson.toJson(1L), myJson.toJson(1L));
+        assertEquals(gson.toJson(1d), myJson.toJson(1d));
+        assertEquals(gson.toJson("aaa"), myJson.toJson("aaa"));
+        assertEquals(gson.toJson('a'), myJson.toJson('a'));
+        assertEquals(gson.toJson(new int[]{1, 2, 3}), myJson.toJson(new int[]{1, 2, 3}));
+        assertEquals(gson.toJson(List.of(1, 2, 3)), myJson.toJson(List.of(1, 2, 3)));
+        assertEquals(gson.toJson(Collections.singletonList(1)), myJson.toJson(Collections.singletonList(1)));
     }
 
     @Test

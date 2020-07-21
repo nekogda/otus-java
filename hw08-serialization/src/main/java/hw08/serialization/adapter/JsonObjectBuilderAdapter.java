@@ -1,9 +1,11 @@
 package hw08.serialization.adapter;
 
+import hw08.serialization.visitor.JsonAdapterHandler;
+
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 
-public class JsonObjectBuilderAdapter implements Adapter {
+public class JsonObjectBuilderAdapter implements BuilderAdapter {
     private final String name;
     private final JsonObjectBuilder builder;
 
@@ -13,12 +15,7 @@ public class JsonObjectBuilderAdapter implements Adapter {
     }
 
     @Override
-    public void add(ArrayHandler ha, ObjectHandler ho) {
-        ho.apply(builder);
-    }
-
-    @Override
-    public void add(ObjectHandler h) {
+    public void add(JsonAdapterHandler h) {
         h.apply(builder);
     }
 
