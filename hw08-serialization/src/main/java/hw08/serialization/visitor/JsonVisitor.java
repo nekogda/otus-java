@@ -24,7 +24,7 @@ public class JsonVisitor implements Visitor {
 
     @Override
     public String toString() {
-        if (stack.size() == 0) {
+        if (stack.isEmpty()) {
             return result;
         }
         return stack.pop().build();
