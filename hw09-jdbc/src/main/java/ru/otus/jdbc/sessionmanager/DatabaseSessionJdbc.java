@@ -11,6 +11,7 @@ public class DatabaseSessionJdbc implements DatabaseSession {
         this.connection = connection;
     }
 
+    @Override
     public Connection getConnection() {
         return connection;
     }

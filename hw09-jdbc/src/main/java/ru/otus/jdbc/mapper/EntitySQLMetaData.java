@@ -1,6 +1,6 @@
 package ru.otus.jdbc.mapper;
 
-public interface EntitySQLMetaData {
+public interface EntitySQLMetaData<T> {
     String getSelectAllSql();
 
     String getSelectByIdSql();
