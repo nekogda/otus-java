@@ -5,12 +5,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.AbstractHibernateTest;
 import ru.otus.core.dao.UserDao;
+import ru.otus.core.model.AddressDataSet;
+import ru.otus.core.model.PhoneDataSet;
 import ru.otus.core.model.User;
 import ru.otus.core.service.DBServiceUser;
-import ru.otus.hibernate.dao.UserDaoHibernate;
 import ru.otus.core.service.DbServiceUserImpl;
+import ru.otus.hibernate.dao.UserDaoHibernate;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,7 +65,9 @@ public class WithAbstractionsTest extends AbstractHibernateTest {
         User savedUser = buildDefaultUser();
         saveUser(savedUser);
 
-        User savedUser2 = new User(savedUser.getId(), TEST_USER_NEW_NAME);
+        User savedUser2 = new User(savedUser.getId(), TEST_USER_NEW_NAME,
+                new AddressDataSet(TEST_ADDRESS_NEW_STREET),
+                Arrays.asList(new PhoneDataSet("333-444"), new PhoneDataSet("444-555")));
         long id = dbServiceUser.saveUser(savedUser2);
         User loadedUser = loadUser(id);
 

@@ -6,17 +6,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.core.dao.UserDao;
+import ru.otus.core.model.AddressDataSet;
+import ru.otus.core.model.PhoneDataSet;
 import ru.otus.core.model.User;
 import ru.otus.core.service.DbServiceException;
 import ru.otus.core.service.DbServiceUserImpl;
 import ru.otus.core.sessionmanager.SessionManager;
 
+import java.util.Arrays;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -49,7 +52,7 @@ class DbServiceUserImplTest {
     @DisplayName(" корректно сохранять пользователя")
     void shouldCorrectSaveUser() {
         var vasya = new User();
-        doAnswer(invocation ->{
+        doAnswer(invocation -> {
             vasya.setId(USER_ID);
             return null;
         }).when(userDao).insertOrUpdate(vasya);
@@ -87,7 +90,8 @@ class DbServiceUserImplTest {
     @Test
     @DisplayName(" корректно загружать пользователя по заданному id")
     void shouldLoadCorrectUserById() {
-        User expectedUser = new User(USER_ID, "Вася");
+        User expectedUser = new User(USER_ID, "Вася", new AddressDataSet("пр-т Ленина 1"),
+                Arrays.asList(new PhoneDataSet("111-222"), new PhoneDataSet("222-333")));
         given(userDao.findById(USER_ID)).willReturn(Optional.of(expectedUser));
         Optional<User> mayBeUser = dbServiceUser.getUser(USER_ID);
         assertThat(mayBeUser).isPresent().get().isEqualToComparingFieldByField(expectedUser);

@@ -4,13 +4,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.AbstractHibernateTest;
+import ru.otus.core.model.AddressDataSet;
+import ru.otus.core.model.PhoneDataSet;
 import ru.otus.core.model.User;
 import ru.otus.hibernate.dao.UserDaoHibernate;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 
+import java.util.Arrays;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Dao для работы с пользователями должно ")
 class UserDaoHibernateTest extends AbstractHibernateTest {
@@ -29,7 +32,7 @@ class UserDaoHibernateTest extends AbstractHibernateTest {
     @Test
     @DisplayName(" корректно загружать пользователя по заданному id")
     void shouldFindCorrectUserById() {
-        User expectedUser = new User(0, "Вася");
+        User expectedUser = buildDefaultUser();
         saveUser(expectedUser);
 
         assertThat(expectedUser.getId()).isGreaterThan(0);
@@ -44,7 +47,7 @@ class UserDaoHibernateTest extends AbstractHibernateTest {
     @DisplayName(" корректно сохранять пользователя")
     @Test
     void shouldCorrectSaveUser() {
-        User expectedUser = new User(0, "Вася");
+        User expectedUser = buildDefaultUser();
         sessionManagerHibernate.beginSession();
         userDaoHibernate.insertOrUpdate(expectedUser);
         long id = expectedUser.getId();
@@ -53,9 +56,17 @@ class UserDaoHibernateTest extends AbstractHibernateTest {
         assertThat(id).isGreaterThan(0);
 
         User actualUser = loadUser(id);
-        assertThat(actualUser).isNotNull().hasFieldOrPropertyWithValue("name", expectedUser.getName());
+        assertThat(actualUser).isNotNull()
+                .hasFieldOrPropertyWithValue("name", expectedUser.getName())
+                .hasFieldOrPropertyWithValue("address", expectedUser.getAddress())
+                .hasFieldOrPropertyWithValue("phones", expectedUser.getPhones());
 
-        expectedUser = new User(id, "Не Вася");
+        expectedUser = new User(id, TEST_USER_NEW_NAME,
+                new AddressDataSet(TEST_ADDRESS_NEW_STREET),
+                Arrays.asList(
+                        new PhoneDataSet("333-444"),
+                        new PhoneDataSet("444-555")));
+
         sessionManagerHibernate.beginSession();
         userDaoHibernate.insertOrUpdate(expectedUser);
         long newId = expectedUser.getId();
@@ -63,7 +74,11 @@ class UserDaoHibernateTest extends AbstractHibernateTest {
 
         assertThat(newId).isGreaterThan(0).isEqualTo(id);
         actualUser = loadUser(newId);
-        assertThat(actualUser).isNotNull().hasFieldOrPropertyWithValue("name", expectedUser.getName());
+
+        assertThat(actualUser).isNotNull()
+                .hasFieldOrPropertyWithValue("name", expectedUser.getName())
+                .hasFieldOrPropertyWithValue("address", expectedUser.getAddress())
+                .hasFieldOrPropertyWithValue("phones", expectedUser.getPhones());
 
     }
 

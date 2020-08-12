@@ -10,15 +10,19 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.otus.AbstractHibernateTest;
+import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.User;
 
-import javax.persistence.Query;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("Демо работы с hibernate (без абстракций) должно ")
 public class WithoutAbstractionsTest extends AbstractHibernateTest {
+    public static final Logger logger = LoggerFactory.getLogger(WithoutAbstractionsTest.class);
 
     @BeforeEach
     @Override
@@ -36,10 +40,11 @@ public class WithoutAbstractionsTest extends AbstractHibernateTest {
             User savedUser = buildDefaultUser();
 
             session.save(savedUser);
-            // Не должно быть выполнено ни одной вставки в БД не смотря на то что метод save был вызван
-            assertThat(getUserStatistics().getInsertCount()).isEqualTo(0);
+            // Из-за двунаправленной связи должна быть выполнена одна вставка в БД (в таблицу User)
+            assertThat(getUserStatistics().getInsertCount()).isEqualTo(1);
 
             session.getTransaction().commit();
+
             // Реальная вставка произошла в момент коммита транзакции (А что если GenerationType.IDENTITY?)
             assertThat(getUserStatistics().getInsertCount()).isEqualTo(1);
 
@@ -204,6 +209,8 @@ public class WithoutAbstractionsTest extends AbstractHibernateTest {
             session.detach(savedUser);
 
             // Еще раз сохранили
+            savedUser.setPhones(new ArrayList<>());
+            savedUser.setAddress(new AddressDataSet(TEST_ADDRESS_NEW_STREET));
             saveUser(session, savedUser);
 
             // Проверка, что второй раз сохраненный пользователь имеет новый id
@@ -246,11 +253,7 @@ public class WithoutAbstractionsTest extends AbstractHibernateTest {
 
             // Вызвали для данного пользователя update
             session.beginTransaction();
-            session.update(savedUser);
-            // Проверка, что id у него не появился
-            assertThat(savedUser.getId()).isEqualTo(0);
-            // Проверка, что коммит транзакции приведет к исключению
-            assertThatThrownBy(session.getTransaction()::commit).isInstanceOf(Exception.class);
+            assertThatThrownBy(() -> session.update(savedUser)).isInstanceOf(Exception.class);
         }
     }
 
@@ -278,38 +281,5 @@ public class WithoutAbstractionsTest extends AbstractHibernateTest {
         User loadedUser = loadUser(savedUser.getId());
         // Проверка, что имя загруженного пользвателя соответствует тому, что дали после сохранения
         assertThat(loadedUser.getName()).isEqualTo(TEST_USER_NEW_NAME);
-    }
-
-    @DisplayName(" показывать, что удаленный через HQL persistent объект остется в сессии, но удаляется в БД")
-    @Test
-    void shouldNotDetachPersistentEntityWhenRemoveWithHQLQuery() {
-        User savedUser = buildDefaultUser();
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-
-            // Сохранили пользователя в рамках текущей сессии. Теперь у него state = persistent
-            session.save(savedUser);
-
-            // Удалили пользователя с помощью запроса
-            Query query = session.createQuery("delete from User u where u.id = ?1");
-            query.setParameter(1, savedUser.getId());
-            query.executeUpdate();
-
-            // Заргрузили пользователя
-            User loadedUser = session.get(User.class, savedUser.getId());
-            // Проверка, что загруженный пользователь не null и равен сохраненному ранее
-            assertThat(loadedUser).isNotNull().isEqualToComparingFieldByField(savedUser);
-
-            // Отсоединили пользователя от контекста
-            session.detach(savedUser);
-
-            // Заргрузили пользователя еще раз
-            loadedUser = session.get(User.class, savedUser.getId());
-
-            // Проверка, что загруженный пользователь null
-            assertThat(loadedUser).isNull();
-
-            session.getTransaction().commit();
-        }
     }
 }
