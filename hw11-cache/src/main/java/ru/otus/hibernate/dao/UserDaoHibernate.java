@@ -14,12 +14,13 @@ import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 import java.util.Optional;
 
 public class UserDaoHibernate implements UserDao {
-    private static Logger logger = LoggerFactory.getLogger(UserDaoHibernate.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserDaoHibernate.class);
 
     private final SessionManagerHibernate sessionManager;
 
     public UserDaoHibernate(SessionManagerHibernate sessionManager) {
         this.sessionManager = sessionManager;
+
     }
 
 

@@ -1,5 +1,6 @@
 package ru.otus.dbservice;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,9 +12,13 @@ import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.PhoneDataSet;
 import ru.otus.core.model.User;
+import ru.otus.core.service.DBServiceUser;
 import ru.otus.core.service.DbServiceException;
 import ru.otus.core.service.DbServiceUserImpl;
 import ru.otus.core.sessionmanager.SessionManager;
+import ru.otus.hibernate.HibernateUtils;
+import ru.otus.hibernate.dao.UserDaoHibernate;
+import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 
 import java.util.Arrays;
 import java.util.Optional;
