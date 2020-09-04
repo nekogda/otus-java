@@ -6,18 +6,19 @@ import org.slf4j.LoggerFactory;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Objects;
 
 class ListenersRefSet<K, V> {
     public static final Logger logger = LoggerFactory.getLogger(ListenersRefSet.class);
-    private final HashMap<Integer, SoftReference<HwListener<K, V>>> hashesListeners = new HashMap<>();
-    private final HashMap<SoftReference<HwListener<K, V>>, Integer> listenersHashes = new HashMap<>();
+    private final HashMap<Integer, WeakReference<HwListener<K, V>>> hashesListeners = new HashMap<>();
+    private final HashMap<WeakReference<HwListener<K, V>>, Integer> listenersHashes = new HashMap<>();
 
     synchronized void add(HwListener<K, V> listener,
                           ReferenceQueue<HwListener<K, V>> listenersRefQueue) {
         var hash = listener.hashCode();
-        var ref = new SoftReference<>(listener, listenersRefQueue);
+        var ref = new WeakReference<>(listener, listenersRefQueue);
         hashesListeners.put(hash, ref);
         listenersHashes.put(ref, hash);
     }
@@ -41,7 +42,7 @@ class ListenersRefSet<K, V> {
         listenersHashes
                 .keySet()
                 .stream()
-                .map(SoftReference::get)
+                .map(WeakReference::get)
                 .filter(Objects::nonNull)
                 .forEach(listener -> listener.notify(key, value, action));
     }

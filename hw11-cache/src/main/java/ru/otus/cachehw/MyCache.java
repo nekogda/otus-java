@@ -16,11 +16,11 @@ public class MyCache<K, V> implements HwCache<K, V> {
     public MyCache() {
         logger.info("constructor called");
 
-        var cleaner = new Thread(new ListenerCleaner<>(listeners, listenersRefQueue));
+        var cleaner = new Thread(new ListenerCleaner<>(listeners, listenersRefQueue), "ListenerCleaner");
         cleaner.start();
 
         var cleanupMgr = new CleanupManager<>(this, cleaner);
-        new Thread(cleanupMgr).start();
+        new Thread(cleanupMgr, "CleanupManager").start();
     }
 
     @Override

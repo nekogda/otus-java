@@ -30,6 +30,7 @@ public class HWCacheDemo {
         cache.remove(1);
 //        cache.removeListener(listener);
         listener = null;
+        System.gc();
 
         cache.get(1);
         cache = null;
