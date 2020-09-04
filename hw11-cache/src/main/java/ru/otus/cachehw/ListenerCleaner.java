@@ -7,14 +7,15 @@ import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.Queue;
+import java.util.Set;
 
 public class ListenerCleaner<K, V> implements Runnable {
     public static final Logger logger = LoggerFactory.getLogger(ListenerCleaner.class);
 
-    private final Queue<SoftReference<HwListener<K, V>>> listeners;
+    private final ListenersRefSet<K, V> listeners;
     private final ReferenceQueue<HwListener<K, V>> referenceQueue;
 
-    public ListenerCleaner(Queue<SoftReference<HwListener<K, V>>> listeners,
+    public ListenerCleaner(ListenersRefSet<K, V> listeners,
                            ReferenceQueue<HwListener<K, V>> referenceQueue) {
         this.listeners = listeners;
         this.referenceQueue = referenceQueue;
