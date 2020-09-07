@@ -1,0 +1,5 @@
+dependencies {
+    implementation "ch.qos.logback:logback-classic:1.2.3"
+    implementation "com.h2database:h2:1.4.200"
+    implementation "org.hibernate:hibernate-core:5.4.19.Final"
+}
