@@ -1,11 +1,15 @@
 package ru.otus.core.model;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "phones")
 public class PhoneDataSet {
+
+    @Expose
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,6 +18,7 @@ public class PhoneDataSet {
     @ManyToOne
     private User user;
 
+    @Expose
     @Column(name = "number", unique = true, nullable = false)
     private String number;
 
@@ -50,8 +55,12 @@ public class PhoneDataSet {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         PhoneDataSet that = (PhoneDataSet) o;
         return number.equals(that.number);
     }

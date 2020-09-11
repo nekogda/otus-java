@@ -1,6 +1,8 @@
 package ru.otus.core.model;
 
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
@@ -12,14 +14,17 @@ import java.util.stream.Collectors;
 @Table(name = "users")
 public class User {
 
+    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
+    @Expose
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Expose
     @OneToOne(
             cascade = CascadeType.ALL,
             optional = false,
@@ -28,6 +33,7 @@ public class User {
     @JoinColumn(name = "address_id", nullable = false)
     private AddressDataSet address;
 
+    @Expose
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -99,8 +105,12 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         User user = (User) o;
         return name.equals(user.name) &&
                 address.equals(user.address);

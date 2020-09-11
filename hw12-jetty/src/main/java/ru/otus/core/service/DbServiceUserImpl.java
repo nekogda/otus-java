@@ -6,6 +6,7 @@ import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.User;
 import ru.otus.core.sessionmanager.SessionManager;
 
+import java.util.List;
 import java.util.Optional;
 
 public class DbServiceUserImpl implements DBServiceUser {
@@ -36,21 +37,35 @@ public class DbServiceUserImpl implements DBServiceUser {
         }
     }
 
-
     @Override
     public Optional<User> getUser(long id) {
         try (SessionManager sessionManager = userDao.getSessionManager()) {
             sessionManager.beginSession();
             try {
                 Optional<User> userOptional = userDao.findById(id);
-
                 logger.info("user: {}", userOptional.orElse(null));
                 return userOptional;
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 sessionManager.rollbackSession();
+                throw new DbServiceException(e);
             }
-            return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<User> getUsers() {
+        try (SessionManager sessionManager = userDao.getSessionManager()) {
+            sessionManager.beginSession();
+            try {
+                List<User> all = userDao.findAll();
+                logger.info("users: {}", all);
+                return all;
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                sessionManager.rollbackSession();
+                throw new DbServiceException(e);
+            }
         }
     }
 }
