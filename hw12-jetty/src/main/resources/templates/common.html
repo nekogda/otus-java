@@ -1,0 +1,105 @@
+<#macro scripts>
+<script>
+        function getUserById() {
+            const userIdTextBox = document.getElementById('userIdTextBox');
+            const userDataContainer = document.getElementById('userDataContainer');
+            const id = userIdTextBox.value;
+            fetch('api/users/' + id)
+                .then(response => response.json())
+                .then(user => userDataContainer.innerHTML = JSON.stringify(user));
+        }
+
+        async function insertUser() {
+            var result = JSON.stringify(
+                {
+                    name: document.getElementById('insertUserForm')['userNameTextBox'].value,
+                    address: {
+                        street: document.getElementById('insertUserForm')['userAddressTextBox'].value
+                    },
+                    phones: document.getElementById('insertUserForm')['userPhonesTextBox'].value
+                    .split(',').map(element => {return { number: element.trim() }}),
+                }
+            );
+
+            let resp = await fetch('api/users/', {
+                method: 'POST',
+                cache: 'no-cache',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: result
+            });
+
+            let jsonBody = await resp.json();
+            const userDataContainer = document.getElementById('userDataContainer');
+
+            const userInsertRespContainer = document.getElementById('userInsertRespContainer');
+            userInsertRespContainer.innerHTML = JSON.stringify(jsonBody)
+        }
+    </script>
+</#macro>
+
+<#macro header>
+<head>
+    <title>Пользователи</title>
+    <@scripts/>
+    <style type="text/css">
+        ul {
+            padding :10px;
+            list-style:none;
+            margin:10px;
+        }
+        li {
+            margin-top: 10px;
+        }
+        li:first-child {
+            margin-top:0;
+        }
+    </style>
+</head>
+</#macro>
+
+<#macro findUserById>
+<h4>Получить пользователя по id</h4>
+<input type="text" id="userIdTextBox" value="2" placeholder="Введите id пользователя">
+<button onclick="getUserById()">Получить</button>
+<pre id="userDataContainer"></pre>
+</#macro>
+
+<#macro findAllUsers>
+<h4>Все пользователи</h4>
+<table style="width: 800px" cellspacing="2" border="1" cellpadding="5">
+    <thead>
+    <tr>
+        <td>Id</td>
+        <td>Имя</td>
+        <td>Адрес</td>
+        <td>Телефоны</td>
+    </tr>
+    </thead>
+    <tbody>
+    <#list dataSet as data>
+    <tr>
+        <td>${data.id}</td>
+        <td>${data.name}</td>
+        <td>${data.address.street}</td>
+        <td>${data.phones?map(phone -> phone.number)?join(", ")}</td>
+    </tr>
+    </#list>
+    </tbody>
+</table>
+</#macro>
+
+<#macro insertUser>
+<h4>Добавить нового пользователя</h4>
+    <form id="insertUserForm">
+        <ul>
+            <li><input type="text" id="userNameTextBox" placeholder="Имя пользователя"></li>
+            <li><input type="text" id="userAddressTextBox" placeholder="Адрес пользователя"></li>
+            <li><input type="text" id="userPhonesTextBox" placeholder="Номера телефонов через запятую" style="width: 600px">
+            </li>
+            <li><button onclick="insertUser(); return false;">Создать</button></li>
+        </ul>
+    </form>
+    <pre id="userInsertRespContainer"></pre>
+</#macro>

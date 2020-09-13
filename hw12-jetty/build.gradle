@@ -1,0 +1,11 @@
+dependencies {
+    implementation "ch.qos.logback:logback-classic:1.2.3"
+    implementation "com.h2database:h2:1.4.200"
+    implementation "org.hibernate:hibernate-core:5.4.19.Final"
+    implementation "com.google.code.gson:gson:2.8.2"
+
+    implementation "org.eclipse.jetty:jetty-server:9.4.31.v20200723"
+    implementation "org.eclipse.jetty:jetty-webapp:9.4.31.v20200723"
+    implementation "org.eclipse.jetty:jetty-security:9.4.31.v20200723"
+    implementation "org.freemarker:freemarker:2.3.30"
+}
